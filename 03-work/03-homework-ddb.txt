@@ -1,0 +1,23 @@
+Here are the extra credit questions. I have changed the scoring and added new options. You can get up to a total of five extra points so don't do everything! Choose some of these. No need to do them in order, skip if it is too perplexing, and interpret them however you like.
+
+Thanks to the students who posed these question!!!
+
+These questions are worth 0.5 point each:
+
+    Top 20 highest airports in the USA.
+    The five smallest seas in the world.
+    Governments that gained independence between Jan. 1 1950 and Dec. 31, 1999.
+    20 lowest cities in China.
+    Countries where population growth is a negative integer.
+
+These questions are worth 1 point each:
+
+    Which countries share the longest border? (Need full name of countries)
+    Top 3 most common religions in the 10 poorest countries in the world.
+    What is the correlation between the number of religions and the number of languages spoken?
+    Rank countries which gained independence after 1990 by their GDP
+    What is the type of government for the countries with the ten highest and lowest GDP?
+    Top 5 rivers that flow through the most provinces in Eastern Europe (or just Europe)
+    The 5 tallest mountains in Greece
+    The GDP of the most populous country on each continent. (I moved this lower because it's pretty tricky, don't get too caught up on it!)
+    Languages shared across borders (list the language and the two countries it goes across)

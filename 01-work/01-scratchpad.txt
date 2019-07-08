@@ -1,0 +1,27 @@
+
+psql -U postgres
+August
+
+mondial=#	equal sign means we're at prompt
+mondial-#	dash means we're in a query that hasn't been completed with an ;
+
+\?		list all the commands
+\l		list databases
+\l+		list databases with size
+\conninfo	display information about current connection
+\c database	connect to new database, e.g., \c template1
+\d		check the database tables or schema
+\d tablename	
+\dt 		list tables of the public schema
+\dt schemaname.* 	list tables of certain schema, e.g., \dt public.*
+\dt *.* 		list tables of all schemas
+Then you can run SQL statements, e.g., SELECT * FROM my_table;
+(Note: a statement must be terminated with semicolon ;)
+  
+\q		quit psql
+
+
+Query Ideas Homework:
+independence against economy (gdp or inflation) and that of neighbors
+languages shared across borders
+was intrigued by "alternative province names" but that ended up a very shallow list 

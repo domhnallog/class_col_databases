@@ -1,0 +1,39 @@
+Due Jun 3 by 10am Points 2 Submitting a file upload Available Jun 1 at 10am - Jun 3 at 10:15am 2 days
+
+This assignment was locked Jun 3 at 10:15am.
+
+Connect to the mondial database and write the following queries for each part of the assignment.
+
+When you are finished, copy your queries and resulting tables from your terminal and paste them into a text file. Then upload that text file to courseworks. (And note that this assignment is worth 2 points, but you can get a total of 4 points if you do everything!!)
+
+PART ONE: WARM-UP (1 POINTS)
+A explore the 'economy' table (\d economy) to get familiar with what columns are in there. Do a SELECT * FROM economy; to check out some rows, and press q to get back to the prompt. Then begin:
+
+1) Find the top 10 countries by GDP using: SELECT -- FROM -- ORDER BY -- LIMIT --
+
+2) Get a list of countries with the GDP below 20000 using: SELECT -- FROM -- WHERE --
+
+3) Get a list of countries sorted by the highest rates inflation: SELECT -- FROM -- ORDER BY --
+
+4) List all countries with the majority of their GDP coming from agriculture: SELECT -- FROM -- WHERE --
+
+5) Create a list of countries in order of highest unemployment, and join the table with the country table so you get the names of the countries not the country code: SELECT -- FROM -- JOIN - ON -- ORDER BY --
+
+6) Invent your own query for the economy table--as simple or as complicated as you want it to be.
+
+PART TWO: AGGREGATE QUERIES (3 POINTS)
+Do the following for queries using the 'language' table.
+
+1) Find the top 10 most dominant languages (highest percentage) in their respective countries. This isn't an aggregate query, use ORDER BY along with other stuff.
+
+2) Get a list of the 10 countries with the most languages according to this database. This is an aggregate query. This should have two columns, the country and the number of languages in the country. Hint: you will be using COUNT() and GROUP BY along with other stuff.
+
+3) Get the same list, but join the country code to the country table so you get the full names of the countries.
+
+4) Get a list of the 10 languages that are most commonly found from country to country. This should have two columns, the language and the number of countries it appears in.
+
+5) Get a list of the 20 languages that are most commonly found from country to country. This is just like the previous query, except it should have a third column that has the average percentage of the population that speaks the language.
+
+6) Finally, modify that last query so that you only get languages that are spoken in more than four countries, but order the results by the highest average percentage of speakers. Hint: you need to use HAVING along with other stuff.
+
+

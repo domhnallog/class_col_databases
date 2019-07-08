@@ -1,0 +1,137 @@
+psql -U postgres
+August
+
+mondial=#	equal sign means we're at prompt
+mondial-#	dash means we're in a query that hasn't been completed with an ;
+
+\?		list all the commands
+\l		list databases
+\l+		list databases with size
+\conninfo	display information about current connection
+\c database	connect to new database, e.g., \c template1
+\d		check the database tables or schema
+\d tablename	
+\dt 		list tables of the public schema
+\dt schemaname.* 	list tables of certain schema, e.g., \dt public.*
+\dt *.* 		list tables of all schemas
+Then you can run SQL statements, e.g., SELECT * FROM my_table;
+(Note: a statement must be terminated with semicolon ;)
+  
+\q		quit psql
+
+
+Conditional Samples:
+DESC		Conditional of ORDER, reverses order
+NULLS LAST	Conditional of ORDER, when you switch to DESC, this moves nulls to the end of the list (hiding them)
+OR 		a reckless command that can bring in far more results than intended
+LIKE ('F%')	wildcard for things starting with F in this example
+IN		Conditional of WHERE (WHERE country IN('CZ', and list countries or make formula)
+HAVING		is like WHERE, but WHERE is for Reg Queries (the things going into the aggregate) and HAVING applies to the GROUP all the stuff aggregated
+JOIN  ON	Conditional of FROM field,
+AS		Conditional of SELECT, an alias or rename of columns in the SELECT set. (eg. ROUND(AVG(percentage),2) AS AVERAGE publishes as average at the top of the column)
+		AS can be omitted!!! The software understand. This will appear in the code of others!!!
+COALESCE	checks for missing value and replace with statement. called "impute null values" eg. COALESCE (thingiwant, ifmissingusethis), coalesce(FIELDTOCHECK, REPLACEWITHTHIS)
+
+
+Regular Query Samples:
+SELECT * FROM mountainonisland WHERE island = 'Honshu' ORDER BY mountain LIMIT 2;
+SELECT name, country, province, population FROM city WHERE population > 1000000 ORDER BY population;
+SELECT name, country, province, population FROM city WHERE population > 1000000 ORDER BY population DESC NULLS LAST;
+SELECT name, country, province, population FROM city WHERE population BETWEEN 7500000 AND 9500000 ORDER BY population DESC;
+SELECT name, country, province, population FROM city WHERE country = 'CN' AND population BETWEEN 7500000 AND 9500000 ORDER BY population DESC;
+SELECT name, country, province, population FROM city WHERE population IN (100000, 200000, 300000) ORDER BY population;
+SELECT name, country, province, population FROM city WHERE country LIKE ('F%') ORDER BY population;
+SELECT name, country, percentage FROM language ORDER BY percentage DESC NULLS LAST, name LIMIT 40;
+
+
+Aggregate Query Samples:
+SELECT country, COUNT(country) FROM city GROUP BY country ORDER BY country;
+SELECT country, COUNT(country) FROM city GROUP BY country ORDER BY count(country) DESC;
+SELECT country, COUNT(country) FROM city WHERE population >1000000 GROUP BY country ORDER BY count(country) DESC;
+SELECT country, COUNT(country) FROM city WHERE population >1000000 GROUP BY country HAVING count(country) >9 ORDER BY count(country) DESC, country;
+SELECT country, SUM(population) FROM city GROUP BY country ORDER BY sum(population) DESC NULLS LAST;
+SELECT country.name, SUM(city.population) FROM city 
+	JOIN country ON city.county = country.code
+	GROUP BY country.name ORDER BY sum(city.population) DESC NULLS LAST;
+SELECT country.name, SUM(city.population) FROM city 
+	JOIN country ON city.county = country.code
+	GROUP BY country.name ORDER BY country.name;
+
+
+Homework tests:
+SELECT country.name, unemployment FROM economy JOIN country ON economy.country = country.code ORDER BY unemployment DESC NULLS LAST LIMIT 10;
+SELECT language.name, country.name, percentage FROM language JOIN country ON language.country = country.code WHERE percentage =100 ORDER BY percentage DESC NULLS LAST, name, country;
+SELECT country, COUNT(name) FROM language GROUP BY country ORDER BY count(name) DESC LIMIT 10;
+SELECT country.name, COUNT(language.name) FROM language JOIN country ON language.country = country.code GROUP BY country.name ORDER BY count(language.name) DESC LIMIT 10;
+SELECT name, COUNT(country) FROM language GROUP BY name ORDER BY count(country) DESC, name LIMIT 10;
+SELECT name, COUNT(country), ROUND(AVG(percentage),2) AS AVERAGE FROM language GROUP BY name HAVING count(country) >4 ORDER BY average DESC, name;
+
+
+Alt way to calc majority ag :
+SELECT country, agriculture FROM economy WHERE agriculture > service AND > industry; 
+SELECT country, agriculture FROM economy WHERE agriculture > coalesce(service, 0) AND > coalesce(industry, 0); 
+SELECT country, agriculture, industry, service FROM economy WHERE agriculture > coalesce(service, 0) AND > coalesce(industry, 0) ORDER BY agriculture; 
+SELECT country, agriculture, industry, service FROM economy WHERE agriculture >coalesce(service, 0) AND agriculture >coalesce(industry, 0) ORDER BY agriculture;
+
+
+
+SELECT river, count(distinct country), count(distinct province) FROM geo_river ORDER BY river
+
+SELECT count(country) from language;
+SELECT count(distinct country) from language;
+SELECT count(name) from language;
+SELECT count(distinct name) from language;
+
+SELECT * FROM  language WHERE name IN('English','Spanish') ORDER BY name;
+SELECT language.name, language.country, language.percentage, economy.gdp 
+	FROM language JOIN economy on language.country = economy.country 
+	WHERE language.name IN ('English','Spanish');
+SELECT language.name, country.name, language.percentage, economy.gdp
+	FROM language JOIN economy on language.country = economy.country 
+		JOIN country ON economy.country = country.code
+	WHERE language.name IN ('English','Spanish');
+
+THIS FIRST ONE DOESN"T WORK // ALIASED ONE BELOW DOES:
+
+WITH langgdp AS (
+		SELECT language.name, country.name, language.percentage, economy.gdp
+		FROM language JOIN economy on language.country = economy.country 
+			JOIN country ON economy.country = country.code
+		WHERE language.name IN ('English','Spanish') ORDER BY economy.gdp)
+	SELECT language.name, SUM(economy.gdp), AVG(economy.gdp) FROM langgdp GROUP BY language.name;
+
+WITH langgdp AS (
+		SELECT language.name AS LANG, country.name AS CN, language.percentage AS PERCENT, economy.gdp AS GDPLANG
+		FROM language JOIN economy on language.country = economy.country 
+			JOIN country ON economy.country = country.code
+		WHERE language.name IN ('English','Spanish') ORDER BY economy.gdp)
+	SELECT langgdp.LANG, SUM(langgdp.GDPLANG), AVG(langgdp.GDPLANG) FROM langgdp GROUP BY langgdp.LANG;
+
+
+
+
+FIVE TALLEST MOUNTAINS IN GREECE:
+	SELECT DISTINCT geo_mountain.country, mountain.name, mountain.elevation
+	FROM mountain JOIN geo_moutain ON mountain.nmae = geo_mountain.mountain
+	WHERE geo_mountain.country = 'GR'
+	ORDER BY mountain.elevation DESC LIMIT 5;
+
+
+
+to find countries in europe
+SELECT country FROM encompasses WHERE continent = 'Europe' AND percentage > 50;
+
+to count # of provinces that a river flows through:
+SELECT count(river), province FROM geo_river GROUP BY province HAVING count(river) >2 ORDER BY count(river) DESC;
+to count # rivers in provinces:
+SELECT count(province), river FROM geo_river GROUP BY river HAVING count(river) >2 ORDER BY count(province) DESC;
+
+combining
+with euroCountries as(
+SELECT country FROM encompasses WHERE continent = 'Europe' AND percentage > 50
+)
+
+
+
+
+

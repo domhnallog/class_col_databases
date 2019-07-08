@@ -1,0 +1,49 @@
+for x in xxx[1,]:	tells the loop to start at 1
+for x in xxx[2,5]:	tells the loop to start at 2 ends 5
+for x in xxx[,6]:	tells the loop to start at 1
+
+Aseem technique:
+	miranda = soup_doc.find_all('div')[3].li
+	for line in miranda.strong.find_next_siblings(string=True):
+    		print(line)
+
+YiYin (TA) technique:
+	soup_doc = BeautifulSoup(raw_html, "html.parser")
+	for line in soup_doc.findAll('div')[3].find('ul').find_all(string=True):
+   	 if line.find("\n")!=-1:
+      	  print(line)
+
+
+
+strip_string
+
+get_text, by comparison, gets all text and tosses tags (good for html that has some structure, but it's mostly poor)
+	variable = blah.blah.get_text('||uniquestring||',strip=True)
+	variable = variable.split('||uniquestring||')
+the first line tosses the tags but converts line breaks into a uniquestring
+the second line turns the uniquestring back into
+
+Things to search
+	searching text for "class_"
+	searching tags for attributes <a href="http:blahblah title="Blah">
+	generator
+		a grouping of results that can be iterated through like a list, but not used like a list
+	set
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

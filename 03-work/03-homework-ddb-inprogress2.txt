@@ -1,0 +1,167 @@
+Here are the extra credit questions. I have changed the scoring and added new options. 
+You can get up to a total of five extra points so don't do everything! Choose some of these. 
+No need to do them in order, skip if it is too perplexing, and interpret them however you like.
+
+Thanks to the students who posed these question!!!
+
+These questions are worth 0.5 point each:
+
+    Top 20 highest airports in the USA.
+	SELECT name, city, elevation FROM airport WHERE country = 'USA' ORDER BY elevation DESC LIMIT 20;
+    The five smallest seas in the world.
+	SELECT name, area FROM sea ORDER BY area LIMIT 5;
+    Governments that gained independence between Jan. 1 1950 and Dec. 31, 1999.
+	SELECT country.name AS name, independence, wasdependent AS formerly FROM politics 
+		JOIN country ON politics.country = country.code 
+		WHERE independence BETWEEN '1950-01-01' AND '1999-12-31' 
+		ORDER BY country LIMIT 20;
+    The 20 lowest cities in China.
+	SELECT name, elevation FROM city WHERE country = 'CH' ORDER BY elevation LIMIT 20;
+	SELECT name, citylocalname.localname, elevation FROM city JOIN citylocalname ON citylocalname.city = city.name WHERE city.country = 'CN' ORDER BY elevation LIMIT 20;
+    The countries where population growth is a negative integer.
+	SELECT country.name, population_growth FROM population JOIN country ON country.code = population.country WHERE population_growth < 0 ORDER BY population_growth, country.name LIMIT 20;
+
+These questions are worth 1 point each:
+
+    Which countries share the longest border? (Need full name of countries)
+	SELECT cnt1.name AS Country_1, cnt2.name AS Country_2, borders.length AS Border_Length FROM borders JOIN country AS cnt1 ON borders.country1 = cnt1.code JOIN country AS cnt2 ON borders.country2 = cnt2.code ORDER BY borders.length DESC LIMIT 3;
+	SELECT cnt1.name AS Country_1, cnt2.name AS Country_2, borders.length AS Border_Length FROM borders 
+		JOIN country AS cnt1 ON borders.country1 = cnt1.code  
+		JOIN country AS cnt2 ON borders.country2 = cnt2.code
+		ORDER BY borders.length DESC LIMIT 3;
+    Top 3 most common religions in the 10 poorest countries in the world.
+WITH poorten AS (
+		SELECT country, gdp FROM economy ORDER BY gdp LIMIT 13)
+	SELECT country.name, poorten.gdp, religion.name, religion.percentage 
+	FROM religion 
+	JOIN poorten ON poorten.country = religion.country
+	JOIN country ON country.code = religion.country
+	ORDER BY poorten.gdp, poorten.country, percentage DESC; 
+
+
+  10 poorest countries
+SELECT country, gdp FROM economy ORDER BY gdp LIMIT 10;
+  popular religions by country
+SELECT country, name, percentage FROM religion ORDER BY country, percentage DESC; 
+  useless, just the biggest percentage of religion by country, no religion name
+SELECT country, max(percentage) FROM religion GROUP BY country ORDER BY country;
+
+Attempt to remove nulls in the religion fields for Falklands & Monserrat
+WITH poorten AS (
+		SELECT country, gdp FROM economy ORDER BY gdp LIMIT 10)
+	SELECT poorten.country, poorten.gdp, COALESCE (religion.name, ---), COALESCE (religion.percentage, ---) 
+	FROM religion 
+	JOIN poorten ON poorten.country = religion.country
+	ORDER BY poorten.gdp, poorten.country, percentage DESC; 
+
+    What is the correlation between the number of religions and the number of languages spoken?
+	SELECT country.name AS country, count(religion.name) AS religions, count(language.name) AS languages 
+		FROM religion 
+		JOIN language ON language.country = religion.country 
+		JOIN country ON country.code = religion.country
+		GROUP BY country.name
+		ORDER BY count(religion.name) DESC, count(language.name) DESC LIMIT 20;
+
+
+
+    Rank countries which gained independence after 1990 by their GDP
+	SELECT country.name, politics.independence, economy.gdp
+		FROM politics 
+		JOIN economy ON politics.country = economy.country
+		JOIN country ON politics.country = country.code 
+		WHERE independence >= '1990-01-01'
+		ORDER BY gdp DESC;
+
+    What is the type of government for the countries with the ten highest and lowest GDP?
+	(SELECT country.name, politics.government, economy.gdp
+		FROM politics 
+		JOIN economy ON politics.country = economy.country
+		JOIN country ON politics.country = country.code 
+		ORDER BY gdp DESC NULLS LAST LIMIT 10) 
+	UNION ALL 
+	(SELECT country.name, politics.government, economy.gdp
+		FROM politics 
+		JOIN economy ON politics.country = economy.country
+		JOIN country ON politics.country = country.code 
+		ORDER BY gdp LIMIT 10);
+	
+
+
+
+    Top 5 rivers that flow through the most provinces in Eastern Europe (or just Europe)
+    The 5 tallest mountains in Greece
+    The GDP of the most populous country on each continent. (I moved this lower because it's pretty tricky, don't get too caught up on it!)
+    Languages shared across borders (list the language and the two countries it goes across)
+	SELECT language.name, cnt1.name AS Country_1, cnt2.name AS Country_2, 
+		FROM
+		
+		
+		JOIN country AS cnt1 ON borders.country1 = cnt1.code  
+		JOIN country AS cnt2 ON borders.country2 = cnt2.code
+		ORDER BY language.name, cnt1.name, cnt2.name 
+
+
+
+
+
+
+RANDOM TESTS:
+	SELECT country1, country2, length FROM borders 
+		WHERE country1 = 'CN' OR country2 = 'CN' 
+		ORDER BY length DESC;
+	SELECT cnt1.name AS Country_1, cnt2.name AS Country_2, borders.length AS Border_Length FROM borders 
+		JOIN country AS cnt1 ON borders.country1 = cnt1.code  
+		JOIN country AS cnt2 ON borders.country2 = cnt2.code
+		WHERE cnt1.name = 'China' OR cnt2.name = 'China' 
+		ORDER BY borders.length DESC;
+	SELECT cnt1.name AS Country_1, cnt2.name AS Country_2, borders.length AS Border_Length FROM borders JOIN country AS cnt1 ON borders.country1 = cnt1.code JOIN country AS cnt2 ON borders.country2 = cnt2.code WHERE cnt1.name = 'China' OR cnt2.name = 'China' ORDER BY borders.length DESC;
+
+
+
+SELECT country, independence, wasdependent FROM politics WHERE country ORDER BY independence;
+SELECT city, othername, country.name FROM cityothername JOIN country ON cityothername.country = country.code ORDER BY country.name, city;
+SELECT city, localname, country.name FROM citylocalname JOIN country ON citylocalname.country = country.code ORDER BY country.name, city;
+
+SELECT country, name, percentage FROM language WHERE country = 'PK' ORDER BY country LIMIT 30;
+
+SELECT country.name, COUNT(language.name) FROM language JOIN country ON language.country = country.code GROUP BY country.name ORDER BY count(language.name) DESC LIMIT 10;
+
+
+
+solar & wind
+ country | character varying(40)
+ type    | character varying(40)
+ year    | integer
+ unit    | character varying(40)
+ usage   | double precision
+ notes   | character varying(40)
+
+SELECT distinct * FROM wind ORDER BY country, year;
+
+
+
+
+
+
+SELECT country, ROUND(AVG(usage)::numeric,1) AS AVERAGE, count(year) AS OVER_YEARS FROM solar GROUP BY country HAVING round(avg(usage)) >500 ORDER BY avg(usage) DESC, country;
+SELECT ROUND(AVG(usage)::numeric,1) AS AVERAGE, country FROM solar GROUP BY country HAVING round(avg(usage)) >500 ORDER BY avg(usage) DESC;
+SELECT year, country FROM solar WHERE start = (SELECT MIN (start) FROM year) ORDER BY country;
+
+amer samoa & gabon 2012
+dominican & ecuador 2011
+
+
+
+SELECT solar.country, solar.year, wind.usage, solar.usage 
+	FROM solar JOIN wind ON wind.year = solar.year AND wind.year = solar.year 
+	GROUP BY solar.year 
+	HAVING year = 1990 
+	ORDER BY solar.year, solar.country;
+
+SELECT solar.country, solar.year, wind.usage, solar.usage 
+	FROM solar JOIN wind ON wind.year = solar.year AND wind.year = solar.year 
+	GROUP BY solar.year 
+	HAVING year = 1990 
+	ORDER BY solar.year, solar.country;
+
+
